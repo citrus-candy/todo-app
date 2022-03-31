@@ -21,6 +21,13 @@ export class LocalStrategy extends PassportStrategy(BaseLocalStrategy) {
   }
 
   // passport-localは、デフォルトで name と password をパラメーターで受け取る
+
+  /**
+   * @description name と passwordを使ったバリデーション処理
+   * @param {string} name ユーザー名
+   * @param {string} password パスワード
+   * @returns {Promise<PasswordOmitUser>} 認証結果のユーザー情報
+   */
   async validate(
     name: User['name'],
     password: User['password'],

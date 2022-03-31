@@ -16,8 +16,10 @@ export class UsersService {
 
   /**
    * @description パスワードをハッシュ化する
+   * @param {string} _password パスワード
+   * @returns {string} ハッシュ化したパスワード
    */
-  private getPasswordHash(_password: string) {
+  private getPasswordHash(_password: string): string {
     const saltRounds = 10;
     const salt: string = bcrypt.genSaltSync(saltRounds);
     return bcrypt.hashSync(_password, salt);
@@ -25,6 +27,8 @@ export class UsersService {
 
   /**
    * @description 新規登録
+   * @param {User} user ユーザー情報
+   * @returns {Promise<User | undefined>} ユーザー情報 or undefined
    */
   async signup(user: User): Promise<User | undefined> {
     const dbUser = await this.findOne(user.name); // DBからUserを取得
@@ -49,6 +53,8 @@ export class UsersService {
 
   /**
    * @description ユーザーを一人を返す
+   * @param {string} name ユーザー名
+   * @returns {Promise<User | undefined>} ユーザー情報 or undefined
    */
   findOne(name: User['name']): Promise<User | undefined> {
     // typeormからDBにアクセスして、ユーザーを取得する

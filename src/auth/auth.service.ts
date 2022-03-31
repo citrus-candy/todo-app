@@ -22,7 +22,10 @@ export class AuthService {
   ) {}
 
   /**
-   * @description ユーザーを認証する
+   * @description ユーザー認証をする
+   * @param {string} name ユーザー名
+   * @param {string} password パスワード
+   * @returns {Promise<PasswordOmitUser | null>} ユーザー情報 or null
    */
   async validateUser(
     name: User['name'],
@@ -42,8 +45,12 @@ export class AuthService {
     return null;
   }
 
-  // jwt tokenを返す
-  async login(user: PasswordOmitUser) {
+  /**
+   * @description ログイン
+   * @param {PasswordOmitUser} user パスワードを除いたユーザー情報
+   * @returns {Promise<{ access_token: string }>} jwt token
+   */
+  async login(user: PasswordOmitUser): Promise<{ access_token: string }> {
     // jwtにつけるPayload情報
     const payload: JWTPayload = { userId: user.id, username: user.name };
 
