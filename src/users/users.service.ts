@@ -4,6 +4,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
 import { User } from '../entities/user.entity'; // typeormで定義したUserエンティティ
 
+type IdOmitUser = Omit<User, 'id'>;
+
 /**
  * @description User情報を扱うクラス
  */
@@ -30,7 +32,7 @@ export class UsersService {
    * @param {User} user ユーザー情報
    * @returns {Promise<User | undefined>} ユーザー情報 or undefined
    */
-  async signup(user: User): Promise<User | undefined> {
+  async signup(user: IdOmitUser): Promise<string> {
     const dbUser = await this.findOne(user.name); // DBからUserを取得
     if (!dbUser) {
       return new Promise((resolve, reject) => {
@@ -38,16 +40,16 @@ export class UsersService {
         user.password = this.getPasswordHash(user.password);
         // ユーザ情報を設定する
         this.userRepository
-          .save<User>(user)
-          .then((result: User) => {
-            resolve(result);
+          .save<IdOmitUser>(user)
+          .then(() => {
+            resolve('Successfully signup!');
           })
           .catch((err: any) => {
             reject(err);
           });
       });
     } else {
-      return undefined;
+      return 'The name is already in use.';
     }
   }
 

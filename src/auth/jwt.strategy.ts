@@ -9,8 +9,8 @@ import { User } from 'src/entities/user.entity';
 
 // JwtについているPayload情報の型
 interface JWTPayload {
-  userId: User['id'];
-  username: User['name'];
+  id: User['id'];
+  name: User['name'];
 }
 
 /**
@@ -35,6 +35,6 @@ export class JwtStrategy extends PassportStrategy(BaseJwtStrategy) {
    * @returns {Promise<JWTPayload>} JWTPayload
    */
   async validate(payload: JWTPayload): Promise<JWTPayload> {
-    return { userId: payload.userId, username: payload.username };
+    return { id: payload.id, name: payload.name };
   }
 }

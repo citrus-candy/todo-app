@@ -7,8 +7,8 @@ import { UsersService } from 'src/users/users.service';
 type PasswordOmitUser = Omit<User, 'password'>;
 
 interface JWTPayload {
-  userId: User['id'];
-  username: User['name'];
+  id: User['id'];
+  name: User['name'];
 }
 
 /**
@@ -50,12 +50,10 @@ export class AuthService {
    * @param {PasswordOmitUser} user パスワードを除いたユーザー情報
    * @returns {Promise<{ access_token: string }>} jwt token
    */
-  async login(user: PasswordOmitUser): Promise<{ access_token: string }> {
+  async login(user: PasswordOmitUser): Promise<string> {
     // jwtにつけるPayload情報
-    const payload: JWTPayload = { userId: user.id, username: user.name };
+    const payload: JWTPayload = { id: user.id, name: user.name };
 
-    return {
-      access_token: this.jwtService.sign(payload),
-    };
+    return this.jwtService.sign(payload);
   }
 }
