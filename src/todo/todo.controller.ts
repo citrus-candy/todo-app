@@ -5,12 +5,15 @@ import {
   HttpStatus,
   Param,
   Post,
+  Put,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { UpdateResult } from 'typeorm';
 import { Todo } from '../entities/todo.entity';
-import { CreateTodoDTO } from './dto/todo.dto';
+import { CreateTodoDTO, UpdateResultDTO, UpdateTodoDTO } from './dto/todo.dto';
 import { TodoService } from './todo.service';
 
 @Controller('todo')
@@ -48,5 +51,26 @@ export class TodoController {
   @Post()
   async addTodo(@Body() todo: CreateTodoDTO): Promise<CreateTodoDTO & Todo> {
     return await this.service.create(todo);
+  }
+
+  /**
+   * @description todoを更新
+   * @param {number} id todoのID
+   * @param {string} userId ユーザーID
+   * @param {UpdateTodoDTO} todo 更新情報
+   * @returns {UpdateResult} 処理結果
+   */
+  @ApiBody({ type: UpdateTodoDTO })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    type: UpdateResultDTO,
+  })
+  @Put(':id/update')
+  async updateTodo(
+    @Param('id') id: number,
+    @Query('user_id') userId: string,
+    @Body() todo: UpdateTodoDTO,
+  ): Promise<UpdateResult> {
+    return await this.service.update(id, userId, todo);
   }
 }
