@@ -2,6 +2,7 @@ import { Repository } from 'typeorm';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
+import { v4 as uuidV4 } from 'uuid';
 import { User } from '../entities/user.entity'; // typeormで定義したUserエンティティ
 
 type IdOmitUser = Omit<User, 'id'>;
@@ -29,18 +30,25 @@ export class UsersService {
 
   /**
    * @description 新規登録
-   * @param {User} user ユーザー情報
-   * @returns {Promise<User | undefined>} ユーザー情報 or undefined
+   * @param {IdOmitUser} idOmitUser ユーザー情報
+   * @returns {Promise<string>} メッセージ
    */
-  async signup(user: IdOmitUser): Promise<string> {
-    const dbUser = await this.findOne(user.name); // DBからUserを取得
+  async signup(idOmitUser: IdOmitUser): Promise<string> {
+    const { name, password } = idOmitUser;
+    const dbUser = await this.findOne(name); // DBからUserを取得
     if (!dbUser) {
       return new Promise((resolve, reject) => {
-        // パスワードをハッシュ化する
-        user.password = this.getPasswordHash(user.password);
+        // UUIDでユーザーIDを生成
+        const uuid: string = uuidV4();
+
+        // パスワードをハッシュ化
+        const hashPassword: string = this.getPasswordHash(password);
+
+        const user: User = { id: uuid, name, password: hashPassword };
+
         // ユーザ情報を設定する
         this.userRepository
-          .save<IdOmitUser>(user)
+          .save<User>(user)
           .then(() => {
             resolve('Successfully signup!');
           })

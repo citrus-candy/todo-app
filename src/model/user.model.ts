@@ -2,7 +2,7 @@ import { ApiProperty, OmitType } from '@nestjs/swagger';
 
 export class User {
   @ApiProperty()
-  id: number;
+  id: string;
 
   @ApiProperty()
   name: string;
