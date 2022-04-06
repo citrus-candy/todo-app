@@ -11,7 +11,7 @@ import {
 export class Todo {
   @ApiProperty()
   @PrimaryGeneratedColumn()
-  readonly task_id: number;
+  readonly todo_id: number;
 
   @ApiProperty()
   @Column({ nullable: false })
