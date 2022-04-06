@@ -49,7 +49,7 @@ export class TodoController {
   /**
    * @description todoを追加
    * @param {CreateTodoDTO} todo ユーザーIDとtodo
-   * @returns {Promise<Todo[]>} 追加したtodo
+   * @returns {Promise<InsertResult>} 処理結果
    */
   @ApiBody({ type: CreateTodoDTO })
   @ApiResponse({
@@ -69,7 +69,7 @@ export class TodoController {
    * @param {number} id todoのID
    * @param {string} userId ユーザーID
    * @param {UpdateTodoDTO} todo 更新情報
-   * @returns {UpdateResult} 処理結果
+   * @returns {Promise<UpdateResult>} 処理結果
    */
   @ApiBody({ type: UpdateTodoDTO })
   @ApiResponse({
