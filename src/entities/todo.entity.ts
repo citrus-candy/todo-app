@@ -2,16 +2,16 @@ import { ApiProperty } from '@nestjs/swagger';
 import {
   Entity,
   Column,
-  PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
+  PrimaryColumn,
 } from 'typeorm';
 
 @Entity()
 export class Todo {
   @ApiProperty()
-  @PrimaryGeneratedColumn()
-  readonly todo_id: number;
+  @PrimaryColumn()
+  todo_id: string;
 
   @ApiProperty()
   @Column({ nullable: false })

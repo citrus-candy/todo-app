@@ -1,3 +1,4 @@
+import { v4 as uuidV4 } from 'uuid';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Todo } from '../entities/todo.entity';
@@ -20,7 +21,14 @@ export class TodoService {
   }
 
   async insert(userId: string, todo: CreateTodoDTO): Promise<InsertResult> {
-    return await this.todoRepository.insert({ user_id: userId, ...todo });
+    // UUIDを生成
+    const uuid: string = uuidV4();
+
+    return await this.todoRepository.insert({
+      todo_id: uuid,
+      user_id: userId,
+      ...todo,
+    });
   }
 
   async update(id: number, userId: string, todo: UpdateTodoDTO) {
