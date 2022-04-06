@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpStatus,
   Param,
@@ -10,7 +11,13 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiBearerAuth, ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiResponse,
+  ApiTags,
+  OmitType,
+} from '@nestjs/swagger';
 import { UpdateResult } from 'typeorm';
 import { Todo } from '../entities/todo.entity';
 import { CreateTodoDTO, UpdateResultDTO, UpdateTodoDTO } from './dto/todo.dto';
@@ -72,5 +79,23 @@ export class TodoController {
     @Body() todo: UpdateTodoDTO,
   ): Promise<UpdateResult> {
     return await this.service.update(id, userId, todo);
+  }
+
+  /**
+   * @description todoを削除
+   * @param {number} id todoのID
+   * @param {string} userId ユーザーID
+   * @returns {Promise<Todo>} 削除したtodo
+   */
+  @ApiResponse({
+    status: HttpStatus.OK,
+    type: OmitType(Todo, ['todo_id'] as const),
+  })
+  @Delete(':id')
+  async deleteTodo(
+    @Param('id') id: number,
+    @Query('user_id') userId: string,
+  ): Promise<Todo> {
+    return await this.service.delete(id, userId);
   }
 }

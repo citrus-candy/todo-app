@@ -26,4 +26,10 @@ export class TodoService {
   async update(id: number, userId: string, todo: UpdateTodoDTO) {
     return await this.todoRepository.update(id, { user_id: userId, ...todo });
   }
+
+  async delete(id: number, userId: string): Promise<Todo> {
+    const deleteTodo = await this.todoRepository.findOne(id);
+    if (deleteTodo.user_id === userId)
+      return await this.todoRepository.remove(deleteTodo);
+  }
 }
