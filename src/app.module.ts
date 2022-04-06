@@ -5,20 +5,19 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
+import { TodoModule } from './todo/todo.module';
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot(), // typeormを使うために使用
+    TypeOrmModule.forRoot(),
     ConfigModule.forRoot({
-      // envファイルを組み込むために使用
       isGlobal: true,
     }),
     UsersModule,
-    AuthModule, // 必須！これが無いと認証処理が動かない
+    AuthModule,
+    TodoModule,
   ],
-  controllers: [
-    AppController, // 後述するクラス
-  ],
+  controllers: [AppController],
   providers: [AppService],
 })
 export class AppModule {}
