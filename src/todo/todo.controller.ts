@@ -18,10 +18,11 @@ import {
   ApiTags,
   OmitType,
 } from '@nestjs/swagger';
-import { UpdateResult } from 'typeorm';
+import { InsertResult, UpdateResult } from 'typeorm';
 import { Todo } from '../entities/todo.entity';
-import { CreateTodoDTO, UpdateResultDTO, UpdateTodoDTO } from './dto/todo.dto';
+import { CreateTodoDTO, UpdateTodoDTO } from './types/todo.dto';
 import { TodoService } from './todo.service';
+import { ApiInsertResult, ApiUpdateResult } from './types/todo.types';
 
 @Controller('todo')
 @UseGuards(AuthGuard('jwt'))
@@ -40,9 +41,9 @@ export class TodoController {
     type: [Todo],
     description: 'Todo contents',
   })
-  @Get(':userId')
-  async getTodo(@Param('userId') userId: string): Promise<Todo[]> {
-    return await this.service.findByUserId(userId);
+  @Get()
+  async getTodo(@Query('user_id') userId: string): Promise<Todo[]> {
+    return await this.service.find(userId);
   }
 
   /**
@@ -53,11 +54,14 @@ export class TodoController {
   @ApiBody({ type: CreateTodoDTO })
   @ApiResponse({
     status: HttpStatus.CREATED,
-    type: Todo,
+    type: ApiInsertResult,
   })
   @Post()
-  async addTodo(@Body() todo: CreateTodoDTO): Promise<CreateTodoDTO & Todo> {
-    return await this.service.create(todo);
+  async addTodo(
+    @Query('user_id') userId: string,
+    @Body() todo: CreateTodoDTO,
+  ): Promise<InsertResult> {
+    return await this.service.insert(userId, todo);
   }
 
   /**
@@ -70,7 +74,7 @@ export class TodoController {
   @ApiBody({ type: UpdateTodoDTO })
   @ApiResponse({
     status: HttpStatus.OK,
-    type: UpdateResultDTO,
+    type: ApiUpdateResult,
   })
   @Put(':id/update')
   async updateTodo(
@@ -96,6 +100,6 @@ export class TodoController {
     @Param('id') id: number,
     @Query('user_id') userId: string,
   ): Promise<Todo> {
-    return await this.service.delete(id, userId);
+    return await this.service.remove(id, userId);
   }
 }
