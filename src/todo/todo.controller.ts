@@ -20,9 +20,9 @@ import {
 } from '@nestjs/swagger';
 import { InsertResult, UpdateResult } from 'typeorm';
 import { Todo } from '../entities/todo.entity';
-import { CreateTodoDTO, UpdateTodoDTO } from './types/todo.dto';
+import { CreateTodoDTO, UpdateTodoDTO } from './@types/todo.dto';
 import { TodoService } from './todo.service';
-import { ApiInsertResult, ApiUpdateResult } from './types/todo.types';
+import { ApiInsertResult, ApiUpdateResult } from './@types/todo.types';
 
 @Controller('todo')
 @UseGuards(AuthGuard('jwt'))
