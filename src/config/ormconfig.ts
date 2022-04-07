@@ -12,7 +12,7 @@ const ormconfig: ConnectionOptions = {
     migrationsDir: 'src/migrations',
     subscribersDir: 'src/subscribers',
   },
-  ssl: true,
+  ssl: { rejectUnauthorized: false },
 };
 
 export default ormconfig;
