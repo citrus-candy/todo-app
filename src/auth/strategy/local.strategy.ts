@@ -1,12 +1,11 @@
-// import先が'passport-jwt'では無い事に注意！
 import { Strategy as BaseLocalStrategy } from 'passport-local';
-
 import { PassportStrategy } from '@nestjs/passport';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { AuthService } from '../auth.service';
-import { User } from 'src/entities/user.entity';
 
-type PasswordOmitUser = Omit<User, 'password'>;
+import { AuthService } from '../auth.service';
+import { User } from '../../entities/user.entity';
+
+import { PasswordOmitUser } from '../@types/auth.types';
 
 /**
  * @description nameとpasswordを使った認証処理を行うクラス
@@ -36,7 +35,11 @@ export class LocalStrategy extends PassportStrategy(BaseLocalStrategy) {
     const user = await this.authService.validateUser(name, password);
 
     if (!user) {
-      throw new UnauthorizedException(); // 認証失敗
+      // 認証失敗
+      throw new UnauthorizedException({
+        statusCode: 401,
+        message: 'Wrong username or password.',
+      });
     }
 
     return user;
